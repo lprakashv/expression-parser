@@ -42,8 +42,8 @@ object Parsers {
 
   def parentheses[_: P]: P[Parentheses] = P(
     ws ~
-      "(".rep(exactly = 1) ~ ws ~/
-      singleTerm ~/
+      "(".rep(exactly = 1) ~ ws ~
+      additions ~
       ws ~ ")".rep(exactly = 1) ~
       ws
   ).map(Parentheses)
@@ -53,8 +53,8 @@ object Parsers {
   def multiTermSeqExpressionGeneric[_: P](binaryOperators: Set[BinaryOperator],
                                           overExpression: => P[Expression]
                                          ): P[(Expression, Seq[(String, Expression)])] = P(
-    ws ~ overExpression ~
-      (CharPred(c => binaryOperators.map(_.symbol).contains(c.toString)).! ~ ws ~/ overExpression ~ ws).rep
+    ws ~ overExpression ~ ws ~
+      (ws ~ CharPred(c => binaryOperators.exists(_.symbol == c.toString)).! ~ ws ~ overExpression ~ ws).rep
       ~ ws
   )
 
@@ -66,7 +66,8 @@ object Parsers {
     }
 
   def exponent[_: P]: P[ExponentExpression] = multiTermSeqExpression(
-    BinaryOperator.Pow, singleTerm
+    BinaryOperator.Pow,
+    singleTerm
   ).map { case (first: Expression, subsequent: Seq[Expression]) =>
     ExponentExpression(first, subsequent.toList)
   }

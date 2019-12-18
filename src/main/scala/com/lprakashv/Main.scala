@@ -19,11 +19,12 @@ object Main extends App {
     } else {
       parse(
         line,
-        Parsers.expression(_).map(_.eval)
+        Parsers.expression(_).map(_.eval),
+        true
       ).fold(
-        (f0, f1, f2) => println(s"Error at '${line.charAt(f1)}' [ internal message: $f2 ]"),
+        (_, f1, f2) => println(s"Error at '${line.charAt(f1)}' [ internal message: $f2 ]"),
         (s0, _) => s0 match {
-          case Literal(value) => println(s"Value : $value")
+          case Literal(value) => println(s"Value : ${BigDecimal(value)}")
           case ErrorValue(msg) => println(s"$msg")
         }
       )
