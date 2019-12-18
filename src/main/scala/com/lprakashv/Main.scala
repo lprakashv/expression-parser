@@ -18,10 +18,10 @@ object Main extends App {
       println("Quitting...")
     } else {
       parse(
-        line.replace("-", "+-"),
+        line,
         Parsers.expression(_).map(_.eval)
       ).fold(
-        (f0, f1, f2) => println(s"Error : [$f0] [$f1] [$f2]"),
+        (f0, f1, f2) => println(s"Error at '${line.charAt(f1)}' [ internal message: $f2 ]"),
         (s0, _) => s0 match {
           case Literal(value) => println(s"Value : $value")
           case ErrorValue(msg) => println(s"$msg")

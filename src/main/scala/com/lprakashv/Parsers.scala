@@ -40,12 +40,18 @@ object Parsers {
 
   def singleTerm[_: P]: P[SingleTermExpression] = P(parentheses | function | number)
 
-  def multiTermSeqExpression[_: P](binaryOperator: BinaryOperator,
-                                   p: => P[Expression]): P[(Expression, Seq[Expression])] = P(
-    ws ~ p ~
-      (binaryOperator.symbol ~ ws ~/ p ~ ws).rep
+  def multiTermSeqExpressionGeneric[_: P](binaryOperators: Set[BinaryOperator],
+                                          overExpression: => P[Expression]
+                                         ): P[(Expression, Seq[Expression])] = P(
+    ws ~ overExpression ~
+      (CharPred(c => binaryOperators.map(_.symbol).contains(c.toString)) ~ ws ~/ overExpression ~ ws).rep
       ~ ws
   )
+
+  def multiTermSeqExpression[_: P](binaryOperator: BinaryOperator,
+                                   overExpression: => P[Expression]
+                                  ): P[(Expression, Seq[Expression])] =
+    multiTermSeqExpressionGeneric(Set(binaryOperator), overExpression)
 
   def exponent[_: P]: P[ExponentExpression] = multiTermSeqExpression(
     BinaryOperator.Pow, singleTerm
@@ -56,21 +62,21 @@ object Parsers {
   def division[_: P]: P[DivSeqExpression] = multiTermSeqExpression(
     BinaryOperator.Divide,
     exponent
-  ).map { case (first: Expression, subsequent: Seq[SingleTermExpression]) =>
+  ).map { case (first: Expression, subsequent: Seq[Expression]) =>
     DivSeqExpression(first, subsequent.toList)
   }
 
   def multiplication[_: P]: P[MulSeqExpression] = multiTermSeqExpression(
     BinaryOperator.Multiply,
     division
-  ).map { case (first: Expression, subsequent: Seq[SingleTermExpression]) =>
+  ).map { case (first: Expression, subsequent: Seq[Expression]) =>
     MulSeqExpression(first, subsequent.toList)
   }
 
-  def additions[_: P]: P[AddSeqExpression] = multiTermSeqExpression(
-    BinaryOperator.Plus,
+  def additions[_: P]: P[AddSeqExpression] = multiTermSeqExpressionGeneric(
+    Set(BinaryOperator.Plus, BinaryOperator.Minus),
     multiplication
-  ).map { case (first: Expression, subsequent: Seq[SingleTermExpression]) =>
+  ).map { case (first: Expression, subsequent: Seq[Expression]) =>
     AddSeqExpression(first, subsequent.toList)
   }
 

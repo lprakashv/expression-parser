@@ -34,13 +34,13 @@ object BinaryOperator {
     override def opEval: (Double, Double) => Double = _ * _
   }
 
-  /*case object Minus extends BinaryOperator {
+  case object Minus extends BinaryOperator {
     override def symbol: String = "-"
 
-    override def priority: Int = 4
+    //override def priority: Int = 4
 
     override def opEval: (Double, Double) => Double = _ - _
-  }*/
+  }
 
   case object Pow extends BinaryOperator {
     override def symbol: String = "^"
