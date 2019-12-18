@@ -1,8 +1,13 @@
 # function-parser
-Continuos REPL Parser for user defined functions (using [fastparse](http://www.lihaoyi.com/fastparse/))
+Continuos REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
 
-### Steps to use
-1. `sbt clean assembly`
-2. `java -jar target/scala-2.13/function-parser-assembly-0.1.jar`
+## Example expression:
+* `1.34 - 234.5 + 3443 ^ 2 + sqrt(69 - 5) * log(34)`
+
+#### Run using:
+`sbt run`
+
+#### Create a standalone jar using:
+`sbt assembly`
 
 ### Preview
