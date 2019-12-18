@@ -1,4 +1,4 @@
-name := "function-parser"
+name := "expression-parser"
 
 version := "0.1"
 
