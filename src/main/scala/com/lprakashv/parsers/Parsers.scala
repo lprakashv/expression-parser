@@ -14,30 +14,33 @@ object Parsers {
   def number[_: P]: P[Number] = P(
     (
       // zero of one times '-' before number
-      "-".rep(min = 0, max = 1) ~/
+      "-".rep(min = 0, max = 1) ~
         (
-          CharIn("0-9").rep(1) ~/
+          CharIn("0-9").rep(1) ~
             (
               // decimal: exactly one '.' followed by sequence of digits
-              CharIn(".").rep(exactly = 1) ~/
+              CharIn(".").rep(exactly = 1) ~
                 CharIn("0-9").rep(1)
               ).rep(0, max = 1)
           )
       ).!
-  ).map(i => Number(i.toDouble))
+  ).map(i => Number(BigDecimal(i)))
 
   def expressionSequence[_: P]: P[Seq[Expression]] = P(
-    ws ~ (ws ~
-      additions ~
-      ws).rep(sep = ",") ~
+    ws ~
+      (
+        ws ~
+          additions ~
+          ws
+        ).rep(sep = ",") ~
       ws
   )
 
   def function[_: P]: P[Fn] = P(
     ws ~
       CharIn("a-z", "A-Z", "_").rep(1).! ~
-      ws ~ "(".rep(exactly = 1) ~ ws ~/
-      expressionSequence ~/
+      ws ~ "(".rep(exactly = 1) ~ ws ~
+      expressionSequence ~
       ws ~ ")".rep(exactly = 1) ~
       ws
   ).map {
@@ -104,10 +107,12 @@ object Parsers {
     val onlyAdditionSubsequent: Seq[Expression] = subsequent.map {
       case ("-", expr) => MulSeqExpression(Number(-1), List(expr))
       case ("+", expr) => expr
+      case (o, expr) => throw new RuntimeException(s"Invalid operation $o on $expr")
     }
     AddSeqExpression(first, onlyAdditionSubsequent.toList)
   }
 
-  // an expression can be considered addition of multiple single units ((2 * 3) + (4 ^ (2 * 5)) + (5 / 2))
-  def expression[_: P] = P(ws ~ additions ~ ws ~ End)
+  // an expression can be considered addition of multiple single units
+  // example : ((2 * 3) + (4 ^ (2 * 5)) + (5 / 2))
+  def expression[_: P]: P[AddSeqExpression] = P(ws ~ additions ~ ws ~ End)
 }
