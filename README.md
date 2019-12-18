@@ -20,3 +20,9 @@ Continuos REPL Parser for user defined expression (using [fastparse](http://www.
 
 #### Preview
 ![demo](demo/expr-par-demo.gif)
+
+#### TODOs:
+- [ ] Add invalid arguments error for functions.
+- [ ] Add function name auto-completion.
+- [ ] Add expression color highlighting (multi-color).
+- [ ] Add expression history and ANSI console edit support.
