@@ -15,7 +15,7 @@ object SingleTermExpression {
         case (e, ErrorValue(msg)) => ErrorValue(s"Error: [$msg] in expression: [ $e ]")
       }
 
-      val literalArgs = evaluatedArgs.map(_._2).map {
+      val literalArgs = evaluatedArgs.map(_._2).collect {
         case Literal(d) => d
       }
 
