@@ -15,3 +15,4 @@ Continuos REPL Parser for user defined expression (using [fastparse](http://www.
 `sbt assembly`
 
 #### Preview
+![demo](demo/expr-par-demo.gif)
