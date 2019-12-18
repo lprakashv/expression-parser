@@ -1,5 +1,5 @@
 # expression-parser
-Continuos REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
+Continuous REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
 
 #### Pre requisites:
 * java - on Mac: `brew cask install adoptopenjdk8`
