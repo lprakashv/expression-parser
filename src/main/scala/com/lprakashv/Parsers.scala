@@ -8,9 +8,19 @@ object Parsers {
   def ws[_: P]: P[Unit] = P(" ".rep(0))
 
   def number[_: P]: P[Number] = P(
-    ("-".rep(min = 0, max = 1) ~ CharIn("0-9").rep(1) ~
-      (CharIn(".").rep(min = 0, max = 1) ~ CharIn("0-9").rep(1)).rep(0)).!)
-    .map(i => Number(i.toDouble))
+    (
+      // zero of one times '-' before number
+      "-".rep(min = 0, max = 1) ~/
+        (
+          CharIn("0-9").rep(1) ~/
+            (
+              // decimal: exactly one '.' followed by sequence of digits
+              CharIn(".").rep(exactly = 1) ~/
+                CharIn("0-9").rep(1)
+              ).rep(0, max = 1)
+          )
+      ).!
+  ).map(i => Number(i.toDouble))
 
   def expressionSequence[_: P]: P[Seq[Expression]] = P(
     ws ~ (ws ~
@@ -42,16 +52,18 @@ object Parsers {
 
   def multiTermSeqExpressionGeneric[_: P](binaryOperators: Set[BinaryOperator],
                                           overExpression: => P[Expression]
-                                         ): P[(Expression, Seq[Expression])] = P(
+                                         ): P[(Expression, Seq[(String, Expression)])] = P(
     ws ~ overExpression ~
-      (CharPred(c => binaryOperators.map(_.symbol).contains(c.toString)) ~ ws ~/ overExpression ~ ws).rep
+      (CharPred(c => binaryOperators.map(_.symbol).contains(c.toString)).! ~ ws ~/ overExpression ~ ws).rep
       ~ ws
   )
 
   def multiTermSeqExpression[_: P](binaryOperator: BinaryOperator,
                                    overExpression: => P[Expression]
                                   ): P[(Expression, Seq[Expression])] =
-    multiTermSeqExpressionGeneric(Set(binaryOperator), overExpression)
+    multiTermSeqExpressionGeneric(Set(binaryOperator), overExpression).map {
+      case (first, operationsWithOperator) => (first, operationsWithOperator.map(_._2))
+    }
 
   def exponent[_: P]: P[ExponentExpression] = multiTermSeqExpression(
     BinaryOperator.Pow, singleTerm
@@ -76,8 +88,12 @@ object Parsers {
   def additions[_: P]: P[AddSeqExpression] = multiTermSeqExpressionGeneric(
     Set(BinaryOperator.Plus, BinaryOperator.Minus),
     multiplication
-  ).map { case (first: Expression, subsequent: Seq[Expression]) =>
-    AddSeqExpression(first, subsequent.toList)
+  ).map { case (first: Expression, subsequent: Seq[(String, Expression)]) =>
+    val onlyAdditionSubsequent: Seq[Expression] = subsequent.map {
+      case ("-", expr) => MulSeqExpression(Number(-1), List(expr))
+      case ("+", expr) => expr
+    }
+    AddSeqExpression(first, onlyAdditionSubsequent.toList)
   }
 
   def expression[_: P] = P(ws ~ additions ~ ws ~ End)
