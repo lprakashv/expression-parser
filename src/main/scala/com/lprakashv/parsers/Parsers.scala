@@ -1,10 +1,14 @@
-package com.lprakashv
+package com.lprakashv.parsers
 
-import com.lprakashv.Expression.{AddSeqExpression, DivSeqExpression, ExponentExpression, Fn, MulSeqExpression, Number, Parentheses}
+import com.lprakashv.models.MultiTermExpression.{AddSeqExpression, DivSeqExpression, ExponentExpression, MulSeqExpression}
+import com.lprakashv.models.SingleTermExpression.{Fn, Number, Parentheses}
+import com.lprakashv.models.{Expression, SingleTermExpression}
+import com.lprakashv.operators.BinaryOperator
 import fastparse.MultiLineWhitespace._
-import fastparse.{CharIn, P, _}
+import fastparse.{CharIn, CharPred, P, _}
 
 object Parsers {
+  // whitespaces
   def ws[_: P]: P[Unit] = P(" ".rep(0))
 
   def number[_: P]: P[Number] = P(
@@ -48,8 +52,10 @@ object Parsers {
       ws
   ).map(Parentheses)
 
+  // single unit of expression
   def singleTerm[_: P]: P[SingleTermExpression] = P(parentheses | function | number)
 
+  // clubbed operations can be considered a single unit (`2 * 5 * 23`, `2 ^ 1 ^ 4` etc)
   def multiTermSeqExpressionGeneric[_: P](binaryOperators: Set[BinaryOperator],
                                           overExpression: => P[Expression]
                                          ): P[(Expression, Seq[(String, Expression)])] = P(
@@ -58,6 +64,7 @@ object Parsers {
       ~ ws
   )
 
+  // multiTermSeqExpressionGeneric with just a single operator
   def multiTermSeqExpression[_: P](binaryOperator: BinaryOperator,
                                    overExpression: => P[Expression]
                                   ): P[(Expression, Seq[Expression])] =
@@ -65,6 +72,7 @@ object Parsers {
       case (first, operationsWithOperator) => (first, operationsWithOperator.map(_._2))
     }
 
+  // multiTermSeqExpression with '^' as operator
   def exponent[_: P]: P[ExponentExpression] = multiTermSeqExpression(
     BinaryOperator.Pow,
     singleTerm
@@ -72,6 +80,7 @@ object Parsers {
     ExponentExpression(first, subsequent.toList)
   }
 
+  // multiTermSeqExpression with '/' as operator
   def division[_: P]: P[DivSeqExpression] = multiTermSeqExpression(
     BinaryOperator.Divide,
     exponent
@@ -79,6 +88,7 @@ object Parsers {
     DivSeqExpression(first, subsequent.toList)
   }
 
+  // multiTermSeqExpression with '*' as operator
   def multiplication[_: P]: P[MulSeqExpression] = multiTermSeqExpression(
     BinaryOperator.Multiply,
     division
@@ -86,6 +96,7 @@ object Parsers {
     MulSeqExpression(first, subsequent.toList)
   }
 
+  // multiTermSeqExpressionGeneric with '+' and '-' as operators
   def additions[_: P]: P[AddSeqExpression] = multiTermSeqExpressionGeneric(
     Set(BinaryOperator.Plus, BinaryOperator.Minus),
     multiplication
@@ -97,5 +108,6 @@ object Parsers {
     AddSeqExpression(first, onlyAdditionSubsequent.toList)
   }
 
+  // an expression can be considered addition of multiple single units ((2 * 3) + (4 ^ (2 * 5)) + (5 / 2))
   def expression[_: P] = P(ws ~ additions ~ ws ~ End)
 }
