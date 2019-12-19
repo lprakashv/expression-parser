@@ -1,4 +1,4 @@
-package com.lprakashv.parsers
+package com.lprakashv.parser
 
 import com.lprakashv.models.MultiTermExpression.{AddSeqExpression, DivSeqExpression, ExponentExpression, MulSeqExpression}
 import com.lprakashv.models.SingleTermExpression.{Fn, Number, Parentheses}
