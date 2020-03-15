@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/lprakashv/expression-parser.svg?branch=master&&style=flat-square)](https://travis-ci.org/lprakashv/expression-parser)
+[![Coverage Status](https://coveralls.io/repos/github/lprakashv/expression-parser/badge.svg?branch=master)](https://coveralls.io/github/lprakashv/expression-parser?branch=master)
+
 # expression-parser
 Continuous REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
 
