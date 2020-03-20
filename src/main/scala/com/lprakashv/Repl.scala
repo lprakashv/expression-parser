@@ -7,7 +7,9 @@ import com.lprakashv.parser.StringParser
 object Repl extends App {
   var keepReading = true
 
-  println(s"All available functions:\n${FunctionStore.getAllFunctions.mkString(", ")}")
+  println(
+    s"All available functions:\n${FunctionStore.getAllFunctions.mkString(", ")}"
+  )
 
   while (keepReading) {
     print("Expression=> ")
@@ -21,13 +23,15 @@ object Repl extends App {
       try {
         StringParser.parseStringToAST(line) match {
           case Left(error) => println(error)
-          case Right(ast) => ast.eval match {
-            case Literal(value) => println(s"Value : $value")
-            case ErrorValue(msg) => println(msg)
-          }
+          case Right(ast) =>
+            ast.eval match {
+              case Literal(value)  => println(s"Value : $value")
+              case ErrorValue(msg) => println(msg)
+            }
         }
       } catch {
-        case e: Throwable => println(s"Exception occurred: ${e.getLocalizedMessage}")
+        case e: Throwable =>
+          println(s"Exception occurred: ${e.getLocalizedMessage}")
       }
     }
   }
