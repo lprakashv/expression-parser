@@ -7,12 +7,12 @@ class StringParserTest extends FunSuite {
   implicit class MathUtils(x: BigDecimal) {
     val precision = 0.001
 
-    def ~=(y: Double) = {
-      if ((x.doubleValue - y).abs < precision) true else false
+    def ~=(y: Double): Boolean = {
+      (x.doubleValue - y).abs < precision
     }
 
-    def ~=(y: Double, precision: Double) = {
-      if ((x.doubleValue - y).abs < precision) true else false
+    def ~=(y: Double, precision: Double): Boolean = {
+      (x.doubleValue - y).abs < precision
     }
   }
 
