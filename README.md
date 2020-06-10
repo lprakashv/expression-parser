@@ -1,16 +1,6 @@
-[![Build Status](https://travis-ci.org/lprakashv/expression-parser.svg?branch=master&&style=flat-square)](https://travis-ci.org/lprakashv/expression-parser)
-[![Coverage Status](https://coveralls.io/repos/github/lprakashv/expression-parser/badge.svg?branch=master)](https://coveralls.io/github/lprakashv/expression-parser?branch=master)
-
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=ncloc)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=alert_status)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=security_rating)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=sqale_index)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=code_smells)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=lprakashv_expression-parser&metric=bugs)](https://sonarcloud.io/dashboard?id=lprakashv_expression-parser)
-
+[![GitHub](https://img.shields.io/github/license/lprakashv/expression-parser?style=flat-square)](LICENSE)
+[![Travis (.com) branch](https://img.shields.io/travis/com/lprakashv/expression-parser/master?style=flat-square)](https://travis-ci.org/lprakashv/expression-parser)
+[![Coveralls github branch](https://img.shields.io/coveralls/github/lprakashv/expression-parser/master?style=flat-square)](https://coveralls.io/github/lprakashv/expression-parser?branch=master)
 
 # expression-parser
 Continuous REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
