@@ -1,4 +1,5 @@
 [![GitHub](https://img.shields.io/github/license/lprakashv/expression-parser?style=flat-square)](LICENSE)
+![Test Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lprakashv/d79f9f3049bf190b417943a2d3b21481/raw/expression-parser__heads_master.json)
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lprakashv/2f297a650e2c9fea0b3b817691fada74/raw/expression-parser__heads_master.json)
 
 # expression-parser
