@@ -45,7 +45,7 @@ jobs:
 
         SUMMARY="$(sbt coverageReport | tail -2 | head -1)"
         # process.env.COVERAGE = '31.93%';
-        echo "COVERAGE=$(echo SUMMARY | cut -d " " -f 6 | cut -b 2- | rev | cut -b 2- | rev)" >> $GITHUB_ENV
+        echo "COVERAGE=$(echo $SUMMARY | cut -d " " -f 6 | cut -b 2- | rev | cut -b 2- | rev)" >> $GITHUB_ENV
 
         # var REF = 'refs/pull/27/merge.json';
         REF=${{ github.ref }}

@@ -1,5 +1,5 @@
 [![GitHub](https://img.shields.io/github/license/lprakashv/expression-parser?style=flat-square)](LICENSE)
-![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lprakashv/2f297a650e2c9fea0b3b817691fada74/raw/expression-parser__heads_main.json)
+![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/lprakashv/2f297a650e2c9fea0b3b817691fada74/raw/expression-parser__heads_master.json)
 
 # expression-parser
 Continuous REPL Parser for user defined expression (using [fastparse](http://www.lihaoyi.com/fastparse/))
