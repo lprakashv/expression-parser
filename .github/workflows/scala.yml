@@ -25,8 +25,25 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: 'sbt'
-    - name: Run tests
-      run: sbt clean coverage test
+    - name: Run tests+coverage and update env for badge
+      run: |
+        # ...
+        # [info] Run completed in 574 milliseconds.
+        # [info] Total number of tests run: 5
+        # [info] Suites: completed 1, aborted 0
+        # [info] Tests: succeeded 5, failed 0, canceled 0, ignored 0, pending 0
+        # [info] All tests passed.
+        # [success] Total time: 11 s, completed Aug 16, 2022, 4:02:09 PM
+        TEST_OUTPUT="$(sbt clean coverage test)"
+        echo "TEST_OUTPUT:"
+        echo "$TEST_OUTPUT"
+        SUMMARY=$(echo "$TEST_OUTPUT" | tail -1)
+        echo "SUMMARY:"
+        echo "$SUMMARY"
+        TEST_RESULT=$(echo "$SUMMARY" | cut -d " " -f 1 | cut -b 2- | rev | cut -b 2- | rev)
+        echo "REST_RESULT:"
+        echo "$TEST_RESULT"
+        echo "TEST_RESULT=$(echo ${TEST_RESULT})" >> $GITHUB_ENV
     - name: Generate coverage report and get badge
       run: |
         # ....
@@ -42,12 +59,15 @@ jobs:
         # [success] Total time: 1 s, completed Aug 16, 2022, 11:23:18 AM
 
         COVERAGE_OUTPUT="$(sbt coverageReport)"
-        echo "Coverage report output:"
+        echo "COVERAGE_OUTPUT:"
         echo "$COVERAGE_OUTPUT"
-        
-        SUMMARY="$(echo $COVERAGE_OUTPUT | tail -2 | head -1)"
-        # process.env.COVERAGE = '31.93%';
-        echo "COVERAGE=$(echo $SUMMARY | cut -d " " -f 6 | cut -b 2- | rev | cut -b 2- | rev)" >> $GITHUB_ENV
+        SUMMARY=$(echo "$COVERAGE_OUTPUT" | tail -2 | head -1)
+        echo "SUMMARY:"
+        echo "$SUMMARY"
+        COVERAGE=$(echo "$SUMMARY" | cut -d " " -f 6 | cut -b 2- | rev | cut -b 2- | rev)
+        echo "COVERAGE:"
+        echo "$COVERAGE"
+        echo "COVERAGE=$(echo ${COVERAGE})" >> $GITHUB_ENV
 
         # var REF = 'refs/pull/27/merge.json';
         REF=${{ github.ref }}
@@ -71,3 +91,13 @@ jobs:
         message: ${{ env.COVERAGE }}
         color: green
         namedLogo: scoverage
+    - name: Create the Test Badge
+      uses: schneegans/dynamic-badges-action@v1.0.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: d79f9f3049bf190b417943a2d3b21481
+        filename: scala-utils__${{ env.BRANCH }}.json
+        label: Tests
+        message: ${{ env.TEST_RESULT }}
+        color: green
+        namedLogo: scalatest
