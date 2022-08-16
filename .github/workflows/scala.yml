@@ -96,7 +96,7 @@ jobs:
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: d79f9f3049bf190b417943a2d3b21481
-        filename: scala-utils__${{ env.BRANCH }}.json
+        filename: expression-parser__${{ env.BRANCH }}.json
         label: Tests
         message: ${{ env.TEST_RESULT }}
         color: green
