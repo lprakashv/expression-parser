@@ -43,7 +43,10 @@ jobs:
         # [info] All done. Coverage was [90.70%]
         # [success] Total time: 1 s, completed Aug 16, 2022, 11:23:18 AM
 
-        SUMMARY="$(sbt coverageReport | tail -2 | head -1)"
+        COVERAGE_OUTPUT="$(sbt coverageReport)"
+        echo $COVERAGE_OUTPUT
+
+        SUMMARY="$(echo $COVERAGE_OUTPUT | tail -2 | head -1)"
         # process.env.COVERAGE = '31.93%';
         echo "COVERAGE=$(echo $SUMMARY | cut -d " " -f 6 | cut -b 2- | rev | cut -b 2- | rev)" >> $GITHUB_ENV
 
